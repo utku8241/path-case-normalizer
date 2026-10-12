@@ -25,3 +25,10 @@ The trade-off: lowercasing is lossy. On a case-sensitive filesystem (Linux defau
 Backslashes are normalized to forward slashes, so `Foo\Bar` and `Foo/Bar` are treated as duplicates. This is correct for filesystem path comparison but means the library is not suitable for comparing arbitrary strings that happen to contain backslashes.
 
 Auto-detection of filesystem sensitivity is a heuristic based on probing the root directory. If probing fails (permissions, unusual mounts), it assumes case-sensitive to avoid false duplicates. Pass `case_sensitive_os` explicitly when you know the answer.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
